@@ -1,0 +1,22 @@
+﻿@using Sky54Bot.Models
+@model Sky54Bot.Models.SubscriptionsViewModel
+@{
+    ViewData["Title"] = "Telegram Subscribes";
+}
+
+<div class="row">
+    <table class="table">
+        <tr>
+            <td>ChatId</td>
+            <td>Name</td>
+        </tr>
+        
+        @for (int i = 0; i < Model.EntityList.Count; i++)
+        {
+            <tr>
+                <td>@Model.EntityList[i].ChatId</td>
+                <td>@Model.EntityList[i].Name</td>
+            </tr>
+        }
+    </table>
+</div>
