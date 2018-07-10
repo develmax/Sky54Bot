@@ -480,11 +480,13 @@ namespace Sky54Bot.Controllers
         private void StartCommand(Update update)
         {
             _bot.SendTextMessageAsync(update.Message.Chat.Id,
-                $"Hello! I am Sky54Bot. Welcome!" + Environment.NewLine + Environment.NewLine +
+                $"Hello! I'm Sky54Bot. Welcome!" + Environment.NewLine + Environment.NewLine +
                 "Commands:" + Environment.NewLine +
-                "/subscribe - Subscribe on updates." + Environment.NewLine +
-                "/unsubscribe - Unsubscribe on updates." + Environment.NewLine +
-                "/status - Status subscribe on updates." + Environment.NewLine + Environment.NewLine +
+                "/now - get current weather." + Environment.NewLine +
+                "/today - get today weather." + Environment.NewLine +
+                "/subscribe - subscribe on bot." + Environment.NewLine +
+                "/unsubscribe - unsubscribe on bot." + Environment.NewLine +
+                "/status - status subscribe on bot." + Environment.NewLine + Environment.NewLine +
                 "\U0001F609" + " Write your features in this chat.");
         }
 
