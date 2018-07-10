@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fizzler" Version="1.2.0" />
+    <PackageReference Include="Fizzler.Systems.HtmlAgilityPack" Version="1.2.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.22.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Common" Version="9.4.0.2-preview" />
