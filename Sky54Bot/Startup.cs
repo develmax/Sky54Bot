@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Sky54Bot.DataAccesses;
 using Sky54Bot.Storages;
+using Sky54Bot.Tasks;
 using Telegram.Bot;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Sky54Bot
 {
@@ -57,6 +60,8 @@ namespace Sky54Bot
             services.AddScoped<IDataAccess, DataAccess>();
 
             services.AddScoped<ISettings, Settings>();
+
+            services.AddSingleton<IHostedService, ScheduleTask>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

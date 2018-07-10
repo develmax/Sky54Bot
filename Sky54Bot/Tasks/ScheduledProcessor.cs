@@ -2,10 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using NCrontab;
 
 namespace Sky54Bot.Tasks
 {
-    /*public abstract class ScheduledProcessor : ScopedProcessor
+    public abstract class ScheduledProcessor : ScopedProcessor
     {
         private CrontabSchedule _schedule;
         private DateTime _nextRun;
@@ -31,5 +32,5 @@ namespace Sky54Bot.Tasks
             }
             while (!stoppingToken.IsCancellationRequested);
         }
-    }*/
+    }
 }

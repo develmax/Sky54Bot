@@ -37,7 +37,31 @@ namespace Sky54Bot.Controllers
         {
             var subscriptions = _dataAccess.SubscribesDataAccess.GetSubscribes();
 
-            return View(new SubscriptionsViewModel { EntityList = subscriptions != null ? subscriptions.ToList() : new List<SubscribeEntity>() });
+            return View(new SubscribesViewModel { EntityList = subscriptions != null ? subscriptions.ToList() : new List<SubscribeEntity>() });
+        }
+
+        [HttpGet("check")]
+        public void Check()
+        {
+            var subscriptions = _dataAccess.SubscribesDataAccess.GetSubscribes();
+
+            if (subscriptions != null && subscriptions.Length > 0)
+            {
+                var htmlStr = GetHtmlStr();
+
+                string compareText = _dataAccess.SettingsDataAccess.ReadSetting("temp");
+
+                var text = FormatText(htmlStr, ref compareText);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    _dataAccess.SettingsDataAccess.WriteSetting("temp", compareText);
+
+                    foreach (var subscription in subscriptions)
+                    {
+                        _bot.SendTextMessageAsync(int.Parse(subscription.ChatId), text);
+                    }
+                }
+            }
         }
 
         [HttpGet("settings")]
@@ -208,11 +232,17 @@ namespace Sky54Bot.Controllers
             { "m-box__icon-wind_south_east", "\U00002198" },
             { "m-box__icon-wind_calm", "\U00002B58" }
         };
-        private void NowCommand(Update update)
+
+        private string GetHtmlStr()
         {
             var uri = new Uri("https://m.pogoda.ngs.ru/");
             var htmlStr = new WebClient().DownloadString(uri);
 
+            return htmlStr;
+        }
+
+        private string FormatText(string htmlStr, ref string compareText)
+        {
             var html = new HtmlDocument();
             html.LoadHtml(htmlStr);
 
@@ -222,7 +252,6 @@ namespace Sky54Bot.Controllers
 
             var document = html.DocumentNode;
 
-
             var boxToaday = document.QuerySelector(".m-box-today");
             var icon = boxToaday.QuerySelector(".m-box__icon-big").GetAttributeValue("class", null);
 
@@ -230,7 +259,7 @@ namespace Sky54Bot.Controllers
 
             if (!string.IsNullOrEmpty(icon))
             {
-                var classes = icon.Split(' ',StringSplitOptions.RemoveEmptyEntries);
+                var classes = icon.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 string iconParsed = null;
                 foreach (var @class in classes)
                 {
@@ -245,9 +274,20 @@ namespace Sky54Bot.Controllers
             }
 
             var temp = boxToaday.QuerySelector(".m-box-today__temp").InnerText;
+
+            if (!string.IsNullOrEmpty(compareText))
+            {
+                if (string.Equals(temp, compareText, StringComparison.OrdinalIgnoreCase))
+                {
+                    return null;
+                }
+            }
+
+            compareText = temp;
+
             var about = boxToaday.QuerySelectorAll(".m-box-today__about .m-box__text");
 
-            
+
 
             /*sb.AppendLine("0263C \U0000263C");
             sb.AppendLine("02600\U00002600");
@@ -297,7 +337,7 @@ namespace Sky54Bot.Controllers
             if (!string.IsNullOrEmpty(additionalInfo))
             {
                 sb.Append(System.Environment.NewLine);
-                
+
                 sb.Append($"{additionalInfo}");
                 if (!string.IsNullOrEmpty(icon))
                     sb.Append($" ( {icon} )");
@@ -329,7 +369,7 @@ namespace Sky54Bot.Controllers
             if (!string.IsNullOrEmpty(windText))
             {
                 sb.Append(System.Environment.NewLine);
-                
+
                 sb.Append($"Ветер {windText.Replace("&nbsp;", " ")}");
 
                 if (!string.IsNullOrEmpty(windIcon))
@@ -385,7 +425,16 @@ namespace Sky54Bot.Controllers
                 sb.Append($"{text}");
             }
 
-            _bot.SendTextMessageAsync(update.Message.Chat.Id, sb.ToString());
+            return sb.ToString();
+        }
+
+        private void NowCommand(Update update)
+        {
+            var htmlStr = GetHtmlStr();
+            string compareText = null;
+            var text = FormatText(htmlStr, ref compareText);
+            if(!string.IsNullOrEmpty(text))
+                _bot.SendTextMessageAsync(update.Message.Chat.Id, text);
 
             /*
 
@@ -408,7 +457,7 @@ namespace Sky54Bot.Controllers
 
         private void TodayCommand(Update update)
         {
-
+            _bot.SendTextMessageAsync(update.Message.Chat.Id, $"Not implementation.");
         }
 
         private void SubscribeCommand(Update update)

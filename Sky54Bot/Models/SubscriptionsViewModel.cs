@@ -3,7 +3,7 @@ using Sky54Bot.Storages.Entities;
 
 namespace Sky54Bot.Models
 {
-    public class SubscriptionsViewModel
+    public class SubscribesViewModel
     {
         public List<SubscribeEntity> EntityList { get; set; }
     }
