@@ -123,6 +123,10 @@ namespace Sky54Bot.Controllers
             {
                 TodayCommand(update);
             }
+            else if (update.Message.Text.Equals("/nextday", StringComparison.OrdinalIgnoreCase))
+            {
+                NextdayCommand(update);
+            }
             else if (update.Message.Text.Equals("/subscribe", StringComparison.OrdinalIgnoreCase))
             {
                 SubscribeCommand(update);
@@ -428,6 +432,180 @@ namespace Sky54Bot.Controllers
             return sb.ToString();
         }
 
+        private string FormatTextToday(string htmlStr)
+        {
+            var html = new HtmlDocument();
+            html.LoadHtml(htmlStr);
+
+            /*foreach (HtmlNode node in html.DocumentNode.QuerySelectorAll("h3.r a"))
+                Console.WriteLine(node.GetAttributeValue("href", null));*/
+
+
+            var document = html.DocumentNode;
+
+            var sb = new StringBuilder();
+
+            var boxTodays = document.QuerySelector(".m-box-weather .m-box-weather__list");
+
+            if (boxTodays != null && boxTodays.ChildNodes.Count > 0)
+            {
+                var today = boxTodays.ChildNodes.First();
+
+                var header = today.QuerySelectorAll(".m-box-weather__header").First()
+                    .QuerySelectorAll(".m-box-weather__header-item").First().QuerySelector(".m-box__text").InnerHtml;
+                if (!string.IsNullOrEmpty(header))
+                {
+                    sb.Append($"{header.Replace("<span class=\"js-weather-title\">сегодня,&nbsp;</span>", "сегодня, ").Replace("<br>", ", ").Replace("&nbsp;", " ")}");
+                }
+
+                var weathers = today.QuerySelectorAll(".m-box-weather__row .m-box-weather__cell");
+                if (weathers != null)
+                {
+                    foreach (var node in weathers)
+                    {
+                        var nodeClasses = node.GetAttributeValue("class", null);
+                        var isNext = false;
+                        if (!string.IsNullOrEmpty(nodeClasses))
+                        {
+                            var classes = nodeClasses.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var @class in classes)
+                            {
+                                if (string.Equals(@class, "m-box-weather__cell_past", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    isNext = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (isNext) continue;
+
+                        var texts = node.QuerySelectorAll(".m-box__text");
+                        var icon = node.QuerySelector(".m-box__icon").GetAttributeValue("class", null);
+
+                        if (!string.IsNullOrEmpty(icon))
+                        {
+                            var classes = icon.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            string iconParsed = null;
+                            foreach (var @class in classes)
+                            {
+                                if (iconMapping.ContainsKey(@class))
+                                {
+                                    iconParsed = iconMapping[@class];
+                                    break;
+                                }
+                            }
+
+                            icon = iconParsed;
+                        }
+                        
+                        var value = node.QuerySelector(".m-box-weather__value").InnerText;
+
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append($"{repl(texts.First().InnerText.Replace("&nbsp;", " "))} {value.Replace("&nbsp;", " ")}°C \U0001F321");
+                        if (!string.IsNullOrEmpty(icon))
+                            sb.Append($" ( {icon} )");
+
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append($"{texts.Last().InnerHtml.Replace("<br>", ", ").Replace("&nbsp;", " ").ToLower()}");
+                    }
+                }
+            }
+            
+            return sb.ToString();
+        }
+
+        private string FormatTextNextday(string htmlStr)
+        {
+            var html = new HtmlDocument();
+            html.LoadHtml(htmlStr);
+
+            /*foreach (HtmlNode node in html.DocumentNode.QuerySelectorAll("h3.r a"))
+                Console.WriteLine(node.GetAttributeValue("href", null));*/
+
+
+            var document = html.DocumentNode;
+
+            var sb = new StringBuilder();
+
+            var boxTodays = document.QuerySelector(".m-box-weather .m-box-weather__list");
+
+            if (boxTodays != null && boxTodays.ChildNodes.Count > 0)
+            {
+                var today = boxTodays.ChildNodes.First().NextSibling;
+
+                var header = today.QuerySelectorAll(".m-box-weather__header").First()
+                    .QuerySelectorAll(".m-box-weather__header-item").First().QuerySelector(".m-box__text").InnerHtml;
+                if (!string.IsNullOrEmpty(header))
+                {
+                    sb.Append($"{header.Replace("<span class=\"js-weather-title\">завтра,&nbsp;</span>", "завтра, ").Replace("<br>", ", ").Replace("&nbsp;", " ")}");
+                }
+
+                var weathers = today.QuerySelectorAll(".m-box-weather__row .m-box-weather__cell");
+                if (weathers != null)
+                {
+                    foreach (var node in weathers)
+                    {
+                        var nodeClasses = node.GetAttributeValue("class", null);
+                        var isNext = false;
+                        if (!string.IsNullOrEmpty(nodeClasses))
+                        {
+                            var classes = nodeClasses.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var @class in classes)
+                            {
+                                if (string.Equals(@class, "m-box-weather__cell_past", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    isNext = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (isNext) continue;
+
+                        var texts = node.QuerySelectorAll(".m-box__text");
+                        var icon = node.QuerySelector(".m-box__icon").GetAttributeValue("class", null);
+
+                        if (!string.IsNullOrEmpty(icon))
+                        {
+                            var classes = icon.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                            string iconParsed = null;
+                            foreach (var @class in classes)
+                            {
+                                if (iconMapping.ContainsKey(@class))
+                                {
+                                    iconParsed = iconMapping[@class];
+                                    break;
+                                }
+                            }
+
+                            icon = iconParsed;
+                        }
+
+                        var value = node.QuerySelector(".m-box-weather__value").InnerText;
+
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append($"{repl(texts.First().InnerText.Replace("&nbsp;", " "))} {value.Replace("&nbsp;", " ")}°C \U0001F321");
+                        if (!string.IsNullOrEmpty(icon))
+                            sb.Append($" ( {icon} )");
+
+                        sb.Append(System.Environment.NewLine);
+                        sb.Append($"{texts.Last().InnerHtml.Replace("<br>", ", ").Replace("&nbsp;", " ").ToLower()}");
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+
+
+        private string repl(string s)
+        {
+            return s.Replace("ночь", "ночью").Replace("утро", "утром").Replace("день", "днем").Replace("вечер", "вечером");
+        }
+
         private void NowCommand(Update update)
         {
             var htmlStr = GetHtmlStr();
@@ -457,8 +635,20 @@ namespace Sky54Bot.Controllers
 
         private void TodayCommand(Update update)
         {
-            _bot.SendTextMessageAsync(update.Message.Chat.Id, $"Not implementation.");
+            var htmlStr = GetHtmlStr();
+            var text = FormatTextToday(htmlStr);
+            if (!string.IsNullOrEmpty(text))
+                _bot.SendTextMessageAsync(update.Message.Chat.Id, text);
         }
+
+        private void NextdayCommand(Update update)
+        {
+            var htmlStr = GetHtmlStr();
+            var text = FormatTextNextday(htmlStr);
+            if (!string.IsNullOrEmpty(text))
+                _bot.SendTextMessageAsync(update.Message.Chat.Id, text);
+        }
+        
 
         private void SubscribeCommand(Update update)
         {
@@ -484,6 +674,7 @@ namespace Sky54Bot.Controllers
                 "Commands:" + Environment.NewLine +
                 "/now - get current weather." + Environment.NewLine +
                 "/today - get today weather." + Environment.NewLine +
+                "/nextday - get nextday weather." + Environment.NewLine +
                 "/subscribe - subscribe on bot." + Environment.NewLine +
                 "/unsubscribe - unsubscribe on bot." + Environment.NewLine +
                 "/status - status subscribe on bot." + Environment.NewLine + Environment.NewLine +
