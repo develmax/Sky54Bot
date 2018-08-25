@@ -22,7 +22,7 @@ namespace Sky54Bot.Tasks
             do
             {
                 var now = DateTime.Now;
-                var nextrun = _schedule.GetNextOccurrence(now);
+                //var nextrun = _schedule.GetNextOccurrence(now);
                 if (now > _nextRun)
                 {
                     await Process();

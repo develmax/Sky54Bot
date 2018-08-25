@@ -61,6 +61,8 @@ namespace Sky54Bot
 
             services.AddScoped<ISettings, Settings>();
 
+            //services.AddHostedService<ScheduleTask>();
+
             services.AddSingleton<IHostedService, ScheduleTask>();
         }
 
