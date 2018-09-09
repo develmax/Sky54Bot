@@ -221,6 +221,7 @@ namespace Sky54Bot.Controllers
             { "partly_cloudy_light_rain_day", "\U000026C8" }, // День, Переменная облачность, небольшие дожди, гроза
             { "partly_cloudy_rainless_day", "\U0001F326" }, // День, Переменная облачность, без существенных осадков
             { "partly_cloudy_rain_day", "\U000026C8" }, // День, Переменная облачность, дождь
+            { "partly_cloudy_rainless_night", "\U0001F327" }, // Ночь, Переменная облачность, без существенных осадков
             { "cloudy_rain_night", "\U000026C8" }, // Ночь, Пасмурно, дождь
             { "cloudy_rain_day", "\U000026C8" }, // День, Пасмурно, дождь
             { "cloudy_none_night", "\U00002601" }, // Ночь, Пасмурно, без осадков
@@ -229,6 +230,7 @@ namespace Sky54Bot.Controllers
             { "sunshine_none_day", "\U00002600" }, // День, Ясная погода, без осадков
             { "mostly_cloudy_rain_night", "\U0001F327" }, // Ночь, Облачно, дождь
             { "mostly_cloudy_rain_day", "\U0001F326" }, // День, Облачно, дождь
+            { "mostly_cloudy_light_rain_night", "\U0001F327"}, // Ночь, Облачно, дождь
             { "m-box__icon-wind_west", "\U00002192" },
             { "m-box__icon-wind_north", "\U00002191" },
             { "m-box__icon-wind_south", "\U00002193" },
@@ -415,14 +417,14 @@ namespace Sky54Bot.Controllers
                 sb.Append($" {span.NextSibling.InnerText.Replace("&minus;", "‒").Replace("&nbsp;", " ")}");
             }
 
-            var magnetic = todayDesc.QuerySelector(".m-box__magnetic_status").InnerText;
+            var magnetic = todayDesc.QuerySelector(".m-box__magnetic_status")?.InnerText;
             if (!string.IsNullOrEmpty(magnetic))
             {
                 sb.Append(System.Environment.NewLine);
                 sb.Append($"{magnetic.Replace("&nbsp;", " ")}");
             }
 
-            var source = todayDesc.QuerySelector(".m-box__source").InnerText;
+            var source = todayDesc.QuerySelector(".m-box__source")?.InnerText;
             if (!string.IsNullOrEmpty(source))
             {
                 sb.Append(System.Environment.NewLine);
