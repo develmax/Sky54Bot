@@ -283,6 +283,8 @@ namespace Sky54Bot.Controllers
             }
 
             var temp = boxToaday.QuerySelector(".m-box-today__temp").InnerText;
+            if (!string.IsNullOrEmpty(temp))
+                temp = temp.Replace("&minus;", "-");
 
             if (!string.IsNullOrEmpty(compareText))
             {
@@ -329,6 +331,8 @@ namespace Sky54Bot.Controllers
                     if (text.IndexOf("ощущается", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         feelInfo = text;
+                        if (!string.IsNullOrEmpty(feelInfo))
+                            feelInfo = feelInfo.Replace("&minus;", "-");
                     }
                     else
                     {
@@ -505,6 +509,8 @@ namespace Sky54Bot.Controllers
                         }
                         
                         var value = node.QuerySelector(".m-box-weather__value").InnerText;
+                        if (!string.IsNullOrEmpty(value))
+                            value = value.Replace("&minus;", "-");
 
                         sb.Append(System.Environment.NewLine);
                         sb.Append(System.Environment.NewLine);
@@ -589,6 +595,8 @@ namespace Sky54Bot.Controllers
                         }
 
                         var value = node.QuerySelector(".m-box-weather__value").InnerText;
+                        if (!string.IsNullOrEmpty(value))
+                            value = value.Replace("&minus;", "-");
 
                         sb.Append(System.Environment.NewLine);
                         sb.Append(System.Environment.NewLine);
