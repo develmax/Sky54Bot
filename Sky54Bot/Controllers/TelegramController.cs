@@ -224,8 +224,10 @@ namespace Sky54Bot.Controllers
             { "partly_cloudy_rainless_night", "\U0001F327" }, // Ночь, Переменная облачность, без существенных осадков
             { "cloudy_rain_night", "\U000026C8" }, // Ночь, Пасмурно, дождь
             { "cloudy_rain_day", "\U000026C8" }, // День, Пасмурно, дождь
+            { "cloudy_light_rain_day", "\U000026C8" }, // День, Пасмурно, дождь
             { "cloudy_none_night", "\U00002601" }, // Ночь, Пасмурно, без осадков
             { "cloudy_none_day", "\U0001F325" }, // День, Пасмурно, без осадков
+            { "cloudy_rainless_night", "\U00002601" }, // Пасмурно, без существенных осадков
             { "sunshine_none_night", " \U00002609" }, // Ночь, Ясная погода, без осадков
             { "sunshine_none_day", "\U00002600" }, // День, Ясная погода, без осадков
             { "mostly_cloudy_rain_night", "\U0001F327" }, // Ночь, Облачно, дождь
