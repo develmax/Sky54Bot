@@ -234,6 +234,7 @@ namespace Sky54Bot.Controllers
             { "mostly_cloudy_rain_day", "\U0001F326" }, // День, Облачно, дождь
             { "mostly_cloudy_light_rain_night", "\U0001F327"}, // Ночь, Облачно, дождь
             { "mostly_cloudy_light_rain_day", "\U0001F327" }, // Облачно, небольшие дожди
+
             { "m-box__icon-wind_west", "\U00002192" },
             { "m-box__icon-wind_north", "\U00002191" },
             { "m-box__icon-wind_south", "\U00002193" },
@@ -436,7 +437,7 @@ namespace Sky54Bot.Controllers
             {
                 sb.Append(System.Environment.NewLine);
                 var text = source.Replace("&nbsp;", " ");
-                text = text.Substring(text.IndexOf("Обновлено", StringComparison.OrdinalIgnoreCase));
+                text = text.Substring(text.IndexOf("Данные обновлены", StringComparison.OrdinalIgnoreCase));
 
                 sb.Append($"{text}");
             }
