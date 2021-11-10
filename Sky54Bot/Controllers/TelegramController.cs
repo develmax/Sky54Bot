@@ -433,11 +433,12 @@ namespace Sky54Bot.Controllers
             }
 
             var source = todayDesc.QuerySelector(".m-box__source")?.InnerText;
-            if (!string.IsNullOrEmpty(source))
+            if (!string.IsNullOrEmpty(source) && source.Contains("обновлен", StringComparison.OrdinalIgnoreCase))
             {
                 sb.Append(System.Environment.NewLine);
                 var text = source.Replace("&nbsp;", " ");
-                text = text.Substring(text.IndexOf("Данные обновлены", StringComparison.OrdinalIgnoreCase));
+
+                text = text.Substring(text.IndexOf("обновлен", StringComparison.OrdinalIgnoreCase));
 
                 sb.Append($"{text}");
             }
